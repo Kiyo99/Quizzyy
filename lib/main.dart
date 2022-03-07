@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'quiz_brain.dart';
 
 QuizBrain quizBrain = QuizBrain();
@@ -11,6 +12,7 @@ class Quizzler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.grey.shade900,
         body: SafeArea(
@@ -35,26 +37,34 @@ class _QuizPageState extends State<QuizPage> {
 
   void checkAnswer(bool userAnswer){
 
+    bool finish = quizBrain.isFinished();
+
     bool correctAnswer = quizBrain.getAnswer();
 
     setState(() {
-      if (userAnswer == correctAnswer){
-        //The user got it
+
+      if (quizBrain.isFinished() == true){
+        Alert(context: context, title: "Finished!", desc: "You've reached the end of the quiz.").show();
+        scoreKeeper.clear();
+        quizBrain.startAgain();
+      }
+      else {
+        if (userAnswer == correctAnswer) {
+          //The user got it
           scoreKeeper.add(const Icon(
               Icons.check, color: Colors.green
           ));
-      }
-      else {
-        //The user failed it
+        }
+        else {
+          //The user failed it
           scoreKeeper.add(const Icon(
               Icons.close, color: Colors.red
           ));
+        }
+
+        quizBrain.nextQuestion();
       }
-
-      quizBrain.nextQuestion();
     });
-
-
   }
 
   @override
