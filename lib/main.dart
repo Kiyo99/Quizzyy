@@ -31,13 +31,31 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
 
-  List <Icon>scoreKeeper = [
+  List <Icon>scoreKeeper = [];
 
-  ];
+  void checkAnswer(bool userAnswer){
+
+    bool correctAnswer = quizBrain.getAnswer();
+
+    setState(() {
+      if (userAnswer == correctAnswer){
+        //The user got it
+          scoreKeeper.add(const Icon(
+              Icons.check, color: Colors.green
+          ));
+      }
+      else {
+        //The user failed it
+          scoreKeeper.add(const Icon(
+              Icons.close, color: Colors.red
+          ));
+      }
+
+      quizBrain.nextQuestion();
+    });
 
 
-
-  int questionNumber = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +69,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.questionBank[questionNumber].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 25.0,
@@ -76,28 +94,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-
-                bool correctAnswer = quizBrain.questionBank[questionNumber].questionAnswer;
-                if (correctAnswer==true){
-                  //The user got it
-                  setState(() {
-                    scoreKeeper.add(const Icon(
-                        Icons.check, color: Colors.green
-                    ));
-                  });
-                }
-                else {
-                  //The user failed it
-                  setState(() {
-                    scoreKeeper.add(const Icon(
-                        Icons.warning, color: Colors.red
-                    ));
-                  });
-                }
-
-                setState(() {
-                  questionNumber++;
-                });
+               checkAnswer(true);
               },
             ),
           ),
@@ -116,33 +113,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-
-                bool correctAnswer = quizBrain.questionBank[questionNumber].questionAnswer;
-                if (correctAnswer==false){
-                  //The user got it
-                  setState(() {
-                    scoreKeeper.add(const Icon(
-                        Icons.check, color: Colors.green
-                    ));
-                  });
-                }
-                else {
-                  //The user failed it
-                  setState(() {
-                    scoreKeeper.add(const Icon(
-                        Icons.warning, color: Colors.red
-                    ));
-                  });
-                }
-
-                setState(() {
-                  questionNumber++;
-                });
-
-
-                setState(() {
-                  questionNumber++;
-                });
+                checkAnswer(false);
               },
             ),
           ),
